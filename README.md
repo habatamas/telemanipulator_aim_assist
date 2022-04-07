@@ -64,3 +64,4 @@ Nyomjuk meg a __Timer Start__ gombot, majd a __Task Space__ fület megnyitva tet
 - megfogás szimulálása
 - saját vezérlő készítése
 - mozgatási korlátok és aim assist implementálása
+- package.xml testreszabása
