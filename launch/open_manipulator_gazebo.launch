@@ -1,0 +1,27 @@
+<launch>
+  <rosparam file="$(find open_manipulator_gazebo)/config/gazebo_controller.yaml" command="load" />
+
+  <!-- World File -->
+  <arg name="world_file" default="$(find telemanipulator_aim_assist)/worlds/world_test.world"/>
+
+  <!-- Launch Gazebo World -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="debug" value="false"/>
+    <arg name="gui" value="true" />
+    <arg name="world_name" value="$(arg world_file)"/>
+  </include>
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <param name="robot_description"
+   command="$(find xacro)/xacro --inorder '$(find open_manipulator_description)/urdf/open_manipulator.urdf.xacro'"/>
+
+  <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+     args="-urdf -model open_manipulator -z 0.964762 -param robot_description"/>
+
+
+  <!-- ros_control robotis manipulator launch file -->
+  <include file="$(find open_manipulator_gazebo)/launch/open_manipulator_controller.launch"/>
+
+</launch>
