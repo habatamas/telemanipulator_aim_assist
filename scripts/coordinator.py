@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import rospy
 from open_manipulator_msgs.srv import SetKinematicsPose, SetKinematicsPoseRequest
+from geometry_msgs.msg import Point
 
 class Coordinator:
     def __init__(self):
@@ -11,6 +12,9 @@ class Coordinator:
         # initialize calls to robot pose request service
         rospy.wait_for_service("/open_manipulator/goal_task_space_path_position_only")
         self.goal_task_space_service = rospy.ServiceProxy("/open_manipulator/goal_task_space_path_position_only", SetKinematicsPose)
+
+        # subscribe to desired position topic
+        rospy.Subscriber("telemanipulator_aim_assist/desired_position", Point, self.desired_position_callback)
 
     def request_pose(self, x, y, z, time=2.0):
         # create request and set data
@@ -31,14 +35,11 @@ class Coordinator:
     def request_init_pose(self):
         self.request_pose(0.286,0,0.204)
 
+    def desired_position_callback(self, desired_position):
+        self.request_pose(desired_position.x,desired_position.y,desired_position.z,0.5)
+
     def run(self):
-        while True:
-            print("home")
-            self.request_home_pose()
-            rospy.sleep(3)
-            print("init")
-            self.request_init_pose()
-            rospy.sleep(3)
+        rospy.spin()
 
 if __name__=="__main__":
     coordinator_node = Coordinator()
