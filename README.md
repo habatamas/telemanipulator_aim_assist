@@ -57,6 +57,12 @@ roslaunch open_manipulator_control_gui open_manipulator_control_gui.launch
 
 Nyomjuk meg a __Timer Start__ gombot, majd a __Task Space__ fület megnyitva tetszőleges TCP koordináták adhatók meg. A __Send__ gomb megnyomásával a robot a beállítótt pozícióba mozgatható.
 
+A koordinátor node indításához az alábbi szkriptet kell futtatni:
+
+```
+rosrun telemanipulator_aim_assist coordinator.py
+```
+
 ## TODO
 
 - végleges szimulált környezet elkészítése
