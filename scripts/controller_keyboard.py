@@ -3,8 +3,8 @@ import rospy
 from geometry_msgs.msg import Point
 
 # initialize ros node
-rospy.init_node('controller_keyboard')
-publisher = rospy.Publisher('desired_position', Point, queue_size=10)
+rospy.init_node('telemanipulator_aim_assist/controller_keyboard')
+publisher = rospy.Publisher('telemanipulator_aim_assist/desired_position', Point, queue_size=10)
 
 print("-= Telemanipulator Aim Assist =-")
 
