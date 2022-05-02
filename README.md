@@ -12,6 +12,8 @@ sudo apt-get install ros-melodic-open-manipulator-controller
 sudo apt-get install ros-melodic-open-manipulator-control-gui
 ```
 
+További részletek a ROBOTIS hivatalos [weboldalán](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/quick_start_guide/).
+
 ## Telepítés
 
 Először lépjünk be a catkin workspace-ünk forrásmappájába:
@@ -49,6 +51,12 @@ Ezután indítsuk el a robotkar kinematikai vezérlőjét:
 roslaunch open_manipulator_controller open_manipulator_controller.launch use_platform:=false
 ```
 
+Majd az rviz-t:
+
+```
+roslaunch telemanipulator_aim_assist telemanipulator_aim_assist_rviz.launch
+```
+
 A teszteléshez indítsuk el a vezérlő GUI-t:
 
 ```
@@ -61,6 +69,12 @@ A koordinátor node indításához az alábbi szkriptet kell futtatni:
 
 ```
 rosrun telemanipulator_aim_assist coordinator.py
+```
+
+A telemanipulátor kézi vezérléshez a következő szkriptet kell futtatni:
+
+```
+rosrun telemanipulator_aim_assist controller_keyboard.py
 ```
 
 ## TODO
