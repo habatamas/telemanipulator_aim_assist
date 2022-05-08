@@ -10,6 +10,7 @@ A csomag ROS Melodic platformra lett fejlesztve, megfelelő működéséhez a hi
 sudo apt-get install ros-melodic-open-manipulator-gazebo
 sudo apt-get install ros-melodic-open-manipulator-controller
 sudo apt-get install ros-melodic-open-manipulator-control-gui
+sudo apt-get install ros-melodic-open-manipulator-description
 ```
 
 További részletek a ROBOTIS hivatalos [weboldalán](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/quick_start_guide/).
