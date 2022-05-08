@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!-- Start gazebo/open manipulator launch file -->
+  <include file="$(find telemanipulator_aim_assist)/launch/open_manipulator_gazebo.launch"/>
+  <!-- Start open manipulator controller-->
+  <arg name="use_platform" default="false" />
+  <include file="$(find open_manipulator_controller)/launch/open_manipulator_controller.launch">
+  <arg name="use_platform" value="false" />
+  </include>
+  <!-- Start open manipulator control gui-->
+  <include file="$(find open_manipulator_control_gui)/launch/open_manipulator_control_gui.launch"/>
+  <!-- Start rviz-->
+  <include file="$(find telemanipulator_aim_assist)/launch/telemanipulator_aim_assist_rviz.launch"/>
+  <!-- Start coordinator node-->
+  <node name="telemanipulator_coordinator" pkg="telemanipulator_aim_assist" type="coordinator.py" output ="screen"/>
+  <!-- Start keyboard controller node-->
+  <node name="controller_keyboard" pkg="telemanipulator_aim_assist" type="controller_keyboard.py" output ="screen"/>
+  <!-- Start interactive marker controller node-->
+  <node name="controller_interactive_marker" pkg="telemanipulator_aim_assist" type="controller_interactive_marker.py" output ="screen"/>
+</launch>
