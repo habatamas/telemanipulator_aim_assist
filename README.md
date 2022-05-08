@@ -44,7 +44,7 @@ A környezet a következő paranccsal indítható el
 roslaunch telemanipulator_aim_assist telemanipulator_aim_assist_rviz.launch
 ```
 <details>
-<summary>Lépésenként is végihaladhatunk</summary>
+<summary>A folyamat lépésekre bontva</summary>
 
 Először indítsuk el a robotkar és a környezet gazebo szimulációját:
 
