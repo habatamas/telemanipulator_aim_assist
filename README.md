@@ -39,6 +39,12 @@ source devel/setup.bash
 ```
 
 ## Szimulált környezet tesztelése
+A környezet a következő paranccsal indítható el
+```
+roslaunch telemanipulator_aim_assist telemanipulator_aim_assist_rviz.launch
+```
+<details>
+<summary>Lépésenként is végihaladhatunk</summary>
 
 Először indítsuk el a robotkar és a környezet gazebo szimulációját:
 
@@ -77,6 +83,12 @@ A telemanipulátor kézi vezérléshez a következő szkriptet kell futtatni:
 ```
 rosrun telemanipulator_aim_assist controller_keyboard.py
 ```
+A telemanipulátor interaktív markeres vezérléshez a következő szkriptet kell futtatni:
+
+```
+rosrun telemanipulator_aim_assist controller_interactive_marker.py
+```
+</details>
 
 ## TODO
 
