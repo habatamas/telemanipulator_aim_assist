@@ -132,10 +132,10 @@
       </link>
     </model>
     <state world_name='default'>
-      <sim_time>90 153000000</sim_time>
-      <real_time>90 328025609</real_time>
-      <wall_time>1649348016 728166242</wall_time>
-      <iterations>90153</iterations>
+      <sim_time>1170 157000000</sim_time>
+      <real_time>233 410212127</real_time>
+      <wall_time>1652098174 371418468</wall_time>
+      <iterations>227571</iterations>
       <model name='ground_plane'>
         <pose frame=''>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -156,16 +156,86 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
+      <model name='unit_box'>
+        <pose frame=''>0.321866 0.0011 1.00622 0 -0 0</pose>
+        <scale>0.025 0.025 0.04</scale>
+        <link name='link'>
+          <pose frame=''>0.321866 0.0011 1.00622 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
       <light name='sun'>
         <pose frame=''>0 0 10 0 -0 0</pose>
       </light>
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose frame=''>6.04727 -5.43339 2.25591 0 0.275643 2.35619</pose>
+        <pose frame=''>0.227499 -0.26113 1.23151 0 0.873796 1.17219</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
+    <model name='unit_box'>
+      <pose frame=''>0.277214 0.014432 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>0.01</mass>
+          <inertia>
+            <ixx>0.00166667</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.00166667</iyy>
+            <iyz>0</iyz>
+            <izz>0.00166667</izz>
+          </inertia>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>1.00002 1.00002 0.999992</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0.002</min_depth>
+              </ode>
+            </contact>
+            <bounce/>
+            <friction>
+              <ode>
+                <mu>10000</mu>
+                <mu2>10000</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>1.00002 1.00002 0.999992</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Blue</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
   </world>
 </sdf>

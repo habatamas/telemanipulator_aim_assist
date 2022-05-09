@@ -1,5 +1,5 @@
 <launch>
-  <rosparam file="$(find open_manipulator_gazebo)/config/gazebo_controller.yaml" command="load" />
+  <rosparam file="$(find telemanipulator_aim_assist)/config/gazebo_controller.yaml" command="load" />
 
   <!-- World File -->
   <arg name="world_file" default="$(find telemanipulator_aim_assist)/worlds/world_test.world"/>
