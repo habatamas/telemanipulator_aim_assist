@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from pydoc import describe
 import rospy
 import threading
 import Queue as queue
@@ -6,8 +7,84 @@ from open_manipulator_msgs.srv import SetKinematicsPose, SetKinematicsPoseReques
 from open_manipulator_msgs.msg import KinematicsPose
 from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker
+from math import sqrt, atan2, sin, cos, pi
+
+class Target:
+    def __init__(self, x, y, z, h_low, h_high, r):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.h_low = h_low
+        self.h_high = h_high
+        self.r = r
+    
+    def is_active(self, desired):
+        r = ((desired.x-self.x)**2+(desired.y-self.y)**2)**0.5
+        return self.z <= desired.z and desired.z <= self.h_high and r <= self.r
+
+    def constrain(self, desired):
+        # calculate xy offset
+        dx = desired.x - self.x
+        dy = desired.y - self.y
+        r = sqrt(dx**2 + dy**2)
+        phi = atan2(dy,dx)
+
+        # check if desired position is in range
+        if(r <= self.r):
+            # conic mode
+            if(self.h_low <= desired.z and desired.z <= self.h_high):
+                ratio = (desired.z - self.h_low)/(self.h_high - self.h_low)
+                r = min(r, ratio * self.r)
+
+            # precise mode
+            elif(self.z <= desired.z and desired.z <= self.h_low):
+                r = 0
+
+        # calculate admitted coordinates
+        admitted = Point()
+        admitted.x = self.x + r*cos(phi)
+        admitted.y = self.y + r*sin(phi)
+        admitted.z = desired.z
+
+        return admitted
+    
+    def create_marker(self):
+        marker = Marker()
+        marker.header.frame_id = "world"
+        marker.header.stamp = rospy.Time()
+        marker.ns = "telemanipulator_aim_assist"
+        marker.type = Marker.TRIANGLE_LIST
+        marker.action = Marker.ADD
+        
+        # common properties
+        marker.pose.position.x = self.x
+        marker.pose.position.y = self.y
+        marker.pose.position.z = self.h_low
+        marker.pose.orientation.x = 0.0
+        marker.pose.orientation.y = 0.0
+        marker.pose.orientation.z = 0.0
+        marker.pose.orientation.w = 1.0
+        marker.scale.x = 1
+        marker.scale.y = 1
+        marker.scale.z = 1
+        marker.color.a = 0.3
+        marker.color.r = 0.0
+        marker.color.g = 0.0
+        marker.color.b = 0.0
+
+        # draw cone
+        n = 100
+        dphi = 2*pi / n
+        for i in range(n):
+            marker.points.append(Point(0,0,0))
+            marker.points.append(Point(self.r*cos(i*dphi),self.r*sin(i*dphi),self.h_high-self.h_low))
+            marker.points.append(Point(self.r*cos((i+1)*dphi),self.r*sin((i+1)*dphi),self.h_high-self.h_low))
+
+        return marker
 
 class Coordinator:
+    targets = [Target(0.3, 0.1, 0, 0.1, 0.2, 0.05), Target(0.321, 0.0, 0, 0.1, 0.2, 0.05)]
+
     def __init__(self):
         # initialize ros node
         rospy.init_node('telemanipulator_coordinator')
@@ -17,7 +94,7 @@ class Coordinator:
         self.speed = 0.1 # 10cm/s
         self.move_queue = queue.Queue()
         move_thread = threading.Thread(target=self.move_thread)
-        move_thread.daemon = daemon=True
+        move_thread.daemon =True
         move_thread.start()
 
         # create event queue
@@ -90,14 +167,17 @@ class Coordinator:
     def _desired_position_callback(self, desired_position):
         self.event_queue.put((self.desired_position_callback, desired_position))
     def desired_position_callback(self, desired_position):
-        # calculate distance from current position
-        dx = desired_position.x-self.actual_x
-        dy = desired_position.y-self.actual_y
-        dz = desired_position.z-self.actual_z
-        d = (dx**2+dy**2+dz**2)**0.5
-        time = d/self.speed
+        # draw target markers
+        for i in range(len(self.targets)):
+            marker = self.targets[i].create_marker()
+            marker.id = 100+i
+            self.marker_publisher.publish(marker)
 
-        self.request_pose(desired_position.x,desired_position.y,desired_position.z,time)
+        # calculate admitted position
+        admitted_position = desired_position
+        for target in self.targets:
+            if(target.is_active(desired_position)):
+                admitted_position = target.constrain(desired_position)
 
         # publish desired position marker
         marker = Marker()
@@ -122,9 +202,44 @@ class Coordinator:
         marker.color.g = 1.0
         marker.color.b = 0.0
         self.marker_publisher.publish(marker)
+        
+        # publish admitted position marker
+        marker = Marker()
+        marker.header.frame_id = "world"
+        marker.header.stamp = rospy.Time()
+        marker.ns = "telemanipulator_aim_assist"
+        marker.id = 1
+        marker.type = Marker.SPHERE
+        marker.action = Marker.ADD
+        marker.pose.position.x = admitted_position.x
+        marker.pose.position.y = admitted_position.y
+        marker.pose.position.z = admitted_position.z
+        marker.pose.orientation.x = 0.0
+        marker.pose.orientation.y = 0.0
+        marker.pose.orientation.z = 0.0
+        marker.pose.orientation.w = 1.0
+        marker.scale.x = 0.02
+        marker.scale.y = 0.02
+        marker.scale.z = 0.02
+        marker.color.a = 1.0
+        marker.color.r = 0.0
+        marker.color.g = 1.0
+        marker.color.b = 0.0
+        self.marker_publisher.publish(marker)
+
+
+        # calculate distance from current position
+        dx = admitted_position.x-self.actual_x
+        dy = admitted_position.y-self.actual_y
+        dz = admitted_position.z-self.actual_z
+        d = (dx**2+dy**2+dz**2)**0.5
+        time = d/self.speed
+
+        self.request_pose(admitted_position.x,admitted_position.y,admitted_position.z,time)
 
     # run event handler task
     def run(self):
+        # event loop
         rate = rospy.Rate(100)
         while not rospy.is_shutdown():
             # handle events
