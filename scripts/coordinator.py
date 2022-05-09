@@ -83,7 +83,7 @@ class Target:
         return marker
 
 class Coordinator:
-    targets = [Target(0.3, 0.1, 0, 0.1, 0.2, 0.05), Target(0.3, 0.0, 0, 0.1, 0.2, 0.05)]
+    targets = [Target(0.3, 0.1, 0, 0.1, 0.2, 0.05), Target(0.321, 0.0, 0, 0.1, 0.2, 0.05)]
 
     def __init__(self):
         # initialize ros node
