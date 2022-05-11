@@ -19,6 +19,9 @@ class Controller:
 
         # create an interactive marker for our server
         int_marker = InteractiveMarker()
+        int_marker.pose.position.x = 0.286
+        int_marker.pose.position.y = 0.0
+        int_marker.pose.position.z = 0.204
         int_marker.header.frame_id = "world"
         int_marker.name = "telemanipulator_controller_marker"
         int_marker.description = "Telemanipulator control"
