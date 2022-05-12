@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 from pydoc import describe
+from socket import timeout
 import rospy
 import threading
 import Queue as queue
 from open_manipulator_msgs.srv import SetKinematicsPose, SetKinematicsPoseRequest
-from open_manipulator_msgs.msg import KinematicsPose
+from open_manipulator_msgs.msg import KinematicsPose, OpenManipulatorState
 from geometry_msgs.msg import Point
 from visualization_msgs.msg import Marker
 from math import sqrt, atan2, sin, cos, pi
@@ -83,7 +84,8 @@ class Target:
         return marker
 
 class Coordinator:
-    targets = [Target(0.3, 0.1, 0, 0.1, 0.2, 0.05), Target(0.321, 0.0, 0, 0.1, 0.2, 0.05)]
+    targets = [Target(0.2, 0.1, 0, 0.1, 0.15, 0.05), Target(0.2, -0.1, 0, 0.1, 0.15, 0.05)]
+    #targets = []
 
     def __init__(self):
         # initialize ros node
@@ -91,7 +93,7 @@ class Coordinator:
         print("node initialized")
 
         # create robot mover thread and queue
-        self.speed = 0.1 # 10cm/s
+        self.speed = 1 # 1m/s
         self.move_queue = queue.Queue()
         move_thread = threading.Thread(target=self.move_thread)
         move_thread.daemon =True
@@ -99,10 +101,6 @@ class Coordinator:
 
         # create event queue
         self.event_queue = queue.Queue()
-
-        # initialize calls to robot pose request service
-        rospy.wait_for_service("/open_manipulator/goal_task_space_path_position_only")
-        self.goal_task_space_service = rospy.ServiceProxy("/open_manipulator/goal_task_space_path_position_only", SetKinematicsPose)
 
         # subscribe to actual TCP position topic and wait for initial pose
         rospy.Subscriber("open_manipulator/gripper/kinematics_pose", KinematicsPose, self._tcp_pose_callback)
@@ -122,6 +120,10 @@ class Coordinator:
             # wait for target position
             x,y,z,time = self.move_queue.get()
 
+            # initialize calls to robot pose request service
+            rospy.wait_for_service("/open_manipulator/goal_task_space_path_position_only")
+            goal_task_space_service = rospy.ServiceProxy("/open_manipulator/goal_task_space_path_position_only", SetKinematicsPose)
+
             # create request and set data
             request = SetKinematicsPoseRequest()
             request.end_effector_name = "gripper"
@@ -132,10 +134,14 @@ class Coordinator:
 
             # call service
             print("New TCP position %g %g %g (time=%g) requested"%(x,y,z,time))
-            response = self.goal_task_space_service(request)
+            response = goal_task_space_service(request)
             print(response)
 
-            rospy.sleep(time)
+            # wait for robot to stop
+            state = OpenManipulatorState()
+            state.open_manipulator_moving_state = state.IS_MOVING
+            while(state.open_manipulator_moving_state!=state.STOPPED):
+                state = rospy.wait_for_message("/open_manipulator/states", OpenManipulatorState) 
     
     # request a TCP position
     def request_pose(self, x, y, z, time=2.0):

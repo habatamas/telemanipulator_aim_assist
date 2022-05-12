@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<launch>
+  <!-- Start open manipulator controller-->
+  <arg name="use_platform" default="true" />
+  <include file="$(find open_manipulator_controller)/launch/open_manipulator_controller.launch">
+  <arg name="use_platform" value="true" />
+  </include>
+  <!-- Start rviz-->
+  <include file="$(find telemanipulator_aim_assist)/launch/telemanipulator_aim_assist_rviz.launch"/>
+  <!-- Start coordinator node-->
+  <node name="telemanipulator_coordinator" pkg="telemanipulator_aim_assist" type="coordinator.py" output ="screen"/>
+</launch>
