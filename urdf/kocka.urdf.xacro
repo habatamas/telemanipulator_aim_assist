@@ -1,0 +1,45 @@
+<robot name="simple_box">
+  <link name="my_box">
+    <inertial>
+      <origin xyz="0 0 0" />
+      <mass value="0.01" />
+      <inertia  ixx="0.001" ixy="0.0"  ixz="0.0"  iyy="0.001"  iyz="0.0"  izz="0.001" />
+    </inertial>
+    <visual name='base_link_visual'>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <mesh filename = "package://telemanipulator_aim_assist/worlds/meshes/kocka_v2.dae"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <box size="0.03 0.03 0.03" />
+      </geometry>
+      <surface>
+        <contact>
+          <ode>
+            <kp>1e+06</kp>
+            <kd>100</kd>
+            <max_vel>1</max_vel>
+            <min_depth>0.001</min_depth>
+          </ode>
+        </contact>
+        <bounce/>
+        <friction>
+          <ode>
+            <mu>10000</mu>
+            <mu2>10000</mu2>
+          </ode>
+          <torsional>
+            <ode/>
+          </torsional>
+        </friction>
+      </surface>
+    </collision>
+  </link>
+  <gazebo reference="my_box">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+</robot>

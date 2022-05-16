@@ -84,7 +84,10 @@ class Target:
         return marker
 
 class Coordinator:
-    targets = [Target(0.2, 0.1, 0, 0.1, 0.15, 0.05), Target(0.2, -0.1, 0, 0.1, 0.15, 0.05)]
+    targets = [Target(0.2, 0.1, 0, 0.1, 0.15, 0.05),
+               Target(0.2, -0.1, 0, 0.1, 0.15, 0.05),
+               Target(0.259, 0, 0, 0.1, 0.15, 0.05),
+               Target(0.259, -0.1, 0, 0.1, 0.15, 0.05)]
     #targets = []
 
     def __init__(self):
