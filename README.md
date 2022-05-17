@@ -1,8 +1,14 @@
+[//]: # (Image References)
+
+[image1]: ./assets/constraint_space.png "Kényszerkörnyezet"
+[image2]: ./assets/gazebo_world_screencap.png "Gazebo world"
+[image3]: ./assets/rviz_screencap.png "RViz ablak"
+
 # Telemanipulator Aim Assist
 
 ROS alapú alkalmazás, amely célja, hogy az OpenMANIPULATOR robotkart szabad mozgatás mellett precízen lehessen pozicionálni a megadott célpontok fölé.
 
-Az alkalmazás valós és szimulált környezetben is implementálva lett, az alábbi demo videón megtekinthető a működés.
+Az alkalmazás valós és szimulált környezetben is implementálva lett, az alábbi demo videón megtekinthető működés közben.
 
 [![Project demo video](https://img.youtube.com/vi/XOpsILf6k4w/0.jpg)](https://youtu.be/XOpsILf6k4w)
 
@@ -19,11 +25,21 @@ Az alkalmazás valós és szimulált környezetben is implementálva lett, az al
 
 A projekt alapötletét a BME MOGI tanszéken elérhető OpenManipulator robotkar és a hozzá készített telemanipulációs eszköz adta. Ezzel könnyen el lehet végezni egyszerű pick-and-place feladatokat, de a precíz műveletek elvégzése sok időt vesz igénybe, mivel a robotkar átveszi a kézremegéseket is, illetve az eszköz csuklószögeinek mérésekor is kerülhetnek pontatlanságok a rendszerbe.
 ## Alapelv
-Ennek megoldására készítettünk egy alkalmazást, amely az előzetesen meghatározott targetek közelében korlátozza a robot mozgását. Ehhez definiálunk egy-egy kúpot a célok feletti térrészben, és ha a megfogó a kúp által kijelölt térbe kerül, az vezetni fogja a megfogót lefelé mozgásnál. A kúp csúcsa alatt csak függőleges mozgás megengedett. A robotkarra vonatkozó kényszermozgás egy henger alakú téren belül érvényesül, amelyet a kúpok alaplapja és az asztal határol, ahogy az alábbi ábra mutatja. A robotkar mozgásának módosításáért a `coordinator.py` kódban létrehozott node felel.
+Ennek megoldására készítettünk egy alkalmazást, amely az előzetesen meghatározott targetek közelében korlátozza a robot mozgását. Ehhez definiálunk egy-egy kúpot a célok feletti térrészben, és ha a megfogó a kúp által kijelölt térbe kerül, az vezetni fogja a megfogót lefelé mozgásnál. A kúp csúcsa alatt csak függőleges mozgás megengedett. A robotkarra vonatkozó kényszermozgás egy henger alakú téren belül érvényesül, amelyet a kúpok alaplapja és az asztal határol, ahogy az alábbi ábra mutatja. A robotkar mozgásának módosításáért a `coordinator.py` kódban létrehozott node felel. A megfogást fizikai szimulációval valósítottuk meg
 
-![Kényszerkörnyezet](https://i.imgur.com/jAywaIB.png)
+  ![alt text][image1]  
 ## Gazebo világ
-## Rviz megjelenítés
+![alt text][image2]
+
+A szimulált világban a robotkart a Gazebo egyszerű asztalmodelljére helyeztük. A manipulálható objektumok egyedi meshsel rendelkező, kockával modellezett objektumok, ezeket a `kocka.urdf.xacro` fájl írja le, a világba a robottal együtt az `open_manipulator_gazebo.launch` fájl helyezi őket.
+
+Ezen kívül elhelyeztünk egy asztalt néző RGB-D kamerát is, ez piros kockaként jelenik meg. A kamera a robot URDF fájljához van hozzáadva.
+## RViz megjelenítés
+![alt text][image3]
+
+RVizben megjeleníthetjük, mit "lát" a kamera, illetve itt jelennek meg a pozicionáló kúpok is. Az interaktív markeres verzérlés is innen valósítható meg. Ha aktív az aim assist, akkor a megfogó általunk megadott helyzetét sárga marker mutatja, a zöld marker pedig a valós, javított helyzetet. (A megfogó nyitását-zárását az OpenManipulator vezérlő GUI-jával irányíthatjuk)
+
+A robotkart irányíthatjuk ugyanúgy a vezérlő GUI-ból, vagy a `keyboard_controller.py` node használatával, a célkoordináták megadásával.
 # Alkalmazás használata
 
 ## Dependenciák és telepítés
