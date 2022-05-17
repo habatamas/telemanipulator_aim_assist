@@ -19,7 +19,9 @@ Az alkalmazás valós és szimulált környezetben is implementálva lett, az al
 
 A projekt alapötletét a BME MOGI tanszéken elérhető OpenManipulator robotkar és a hozzá készített telemanipulációs eszköz adta. Ezzel könnyen el lehet végezni egyszerű pick-and-place feladatokat, de a precíz műveletek elvégzése sok időt vesz igénybe, mivel a robotkar átveszi a kézremegéseket is, illetve az eszköz csuklószögeinek mérésekor is kerülhetnek pontatlanságok a rendszerbe.
 
-Ennek megoldására készítettünk egy alkalmazást, amely az előzetesen meghatározott targetek közelében korlátozza a robot mozgását. Ehhez definiálunk egy-egy kúpot a célok feletti térrészben, és ha a megfogó a kúp által kijelölt térbe kerül, az vezetni fogja a megfogót lefelé mozgásnál. A kúp csúcsa alatt csak függőleges mozgás megengedett. A robotkarra vonatkozó kényszermozgás egy henger alakú téren belül érvényesül, amelyet a kúpok alaplapja és az asztal határol, ahogy az ábra mutatja
+Ennek megoldására készítettünk egy alkalmazást, amely az előzetesen meghatározott targetek közelében korlátozza a robot mozgását. Ehhez definiálunk egy-egy kúpot a célok feletti térrészben, és ha a megfogó a kúp által kijelölt térbe kerül, az vezetni fogja a megfogót lefelé mozgásnál. A kúp csúcsa alatt csak függőleges mozgás megengedett. A robotkarra vonatkozó kényszermozgás egy henger alakú téren belül érvényesül, amelyet a kúpok alaplapja és az asztal határol, ahogy az alábbi ábra mutatja. A robotkar mozgásának módosításáért a `coordinator.py` kódban létrehozott node felel.
+
+![Kényszerkörnyezet](https://i.imgur.com/jAywaIB.png)
 
 # Alkalmazás használata
 
