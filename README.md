@@ -1,8 +1,25 @@
 # Telemanipulator Aim Assist
 
-ROS alapú alkalmazás, amellyel az OpenMANIPULATOR egyszerre szabadon és precíz pozícionálással mozgatható.
+ROS alapú alkalmazás, amely célja, hogy az OpenMANIPULATOR robotkart szabad mozgatás mellett precízen lehessen pozicionálni a megadott célpontok fölé.
 
-## Dependenciák
+Az alkalmazás valós és szimulált környezetben is implementálva lett, az alábbi demo videón megtekinthető a működés.
+[![Project demo video](https://img.youtube.com/vi/XOpsILf6k4w/0.jpg)](https://youtu.be/XOpsILf6k4w)
+
+# Tartalomjegyzék
+1. [Projekt felépítése](#Projekt-felépítése)
+2. [Alkalmazás használata](#Alkalmazás-használata)
+2.1 [Dependenciák és telepítés](#Dependenciák-és-telepítés)  
+2.2. [Szimulált környezet](#Szimulált-környezet)  
+2.2.1 [Irányítás koordináták megadásával](#Irányítás-koordináták-megadásával)  
+2.2.2 [Irányítás interaktív markerrel](#Irányítás-interaktív-markerrel)  
+2.3 [Irányítás MOGI haptikus eszközzel valós környezetben](#Irányítás-MOGI-haptikus-eszközzel-valós-környezetben)  
+
+# Projekt felépítése 
+
+
+# Alkalmazás használata
+
+## Dependenciák és telepítés
 
 A csomag ROS Melodic platformra lett fejlesztve, megfelelő működéséhez a hivatalos OpenMANIPULATOR csomagokat is szükséges telepíteni az alábbi módon:
 
@@ -15,7 +32,7 @@ sudo apt-get install ros-melodic-open-manipulator-description
 
 További részletek a ROBOTIS hivatalos [weboldalán](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/quick_start_guide/).
 
-## Telepítés
+**Telepítés**
 
 Először lépjünk be a catkin workspace-ünk forrásmappájába:
 ```
@@ -38,7 +55,10 @@ Töltsük be a környezetet:
 source devel/setup.bash
 ```
 
-## Szimulált környezet tesztelése
+## Szimulált környezet 
+### Irányítás koordináták megadásával
+asdadada
+### Irányítás interaktív markerrel
 A környezet a következő paranccsal indítható el
 ```
 roslaunch telemanipulator_aim_assist telemanipulator_aim_assist_rviz.launch
@@ -90,11 +110,15 @@ rosrun telemanipulator_aim_assist controller_interactive_marker.py
 ```
 </details>
 
-## TODO
+### Irányítás MOGI haptikus eszközzel valós környezetben
+
+
+<!---## TODO
 
 - végleges szimulált környezet elkészítése
 - rviz integráció
 - megfogás szimulálása
 - saját vezérlő készítése
 - mozgatási korlátok és aim assist implementálása
-- package.xml testreszabása
+- package.xml testreszabása 
+-->
