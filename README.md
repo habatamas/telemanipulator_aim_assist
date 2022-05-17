@@ -25,7 +25,7 @@ Az alkalmazás valós és szimulált környezetben is implementálva lett, az al
 
 A projekt alapötletét a BME MOGI tanszéken elérhető OpenManipulator robotkar és a hozzá készített telemanipulációs eszköz adta. Ezzel könnyen el lehet végezni egyszerű pick-and-place feladatokat, de a precíz műveletek elvégzése sok időt vesz igénybe, mivel a robotkar átveszi a kézremegéseket is, illetve az eszköz csuklószögeinek mérésekor is kerülhetnek pontatlanságok a rendszerbe.
 ## Alapelv
-Ennek megoldására készítettünk egy alkalmazást, amely az előzetesen meghatározott targetek közelében korlátozza a robot mozgását. Ehhez definiálunk egy-egy kúpot a célok feletti térrészben, és ha a megfogó a kúp által kijelölt térbe kerül, az vezetni fogja a megfogót lefelé mozgásnál. A kúp csúcsa alatt csak függőleges mozgás megengedett. A robotkarra vonatkozó kényszermozgás egy henger alakú téren belül érvényesül, amelyet a kúpok alaplapja és az asztal határol, ahogy az alábbi ábra mutatja. A robotkar mozgásának módosításáért a `coordinator.py` kódban létrehozott node felel. A megfogást fizikai szimulációval valósítottuk meg
+Ennek megoldására készítettünk egy alkalmazást, amely az előzetesen meghatározott targetek közelében korlátozza a robot mozgását. Ehhez definiálunk egy-egy kúpot a célok feletti térrészben, és ha a megfogó a kúp által kijelölt térbe kerül, az vezetni fogja a megfogót lefelé mozgásnál. A kúp csúcsa alatt csak függőleges mozgás megengedett. A robotkarra vonatkozó kényszermozgás egy henger alakú téren belül érvényesül, amelyet a kúpok alaplapja és az asztal határol, ahogy az alábbi ábra mutatja. A robotkar mozgásának módosításáért a `coordinator.py` kódban létrehozott node felel. A megfogást fizikai szimulációval, a súrlódások modellezésével valósítottuk meg.
 
   ![alt text][image1]  
 ## Gazebo világ
@@ -80,15 +80,6 @@ source devel/setup.bash
 
 ## Szimulált környezet 
 ### Irányítás koordináták megadásával
-asdadada
-### Irányítás interaktív markerrel
-A környezet a következő paranccsal indítható el
-```
-roslaunch telemanipulator_aim_assist telemanipulator_aim_assist_rviz.launch
-```
-<details>
-<summary>A folyamat lépésekre bontva</summary>
-
 Először indítsuk el a robotkar és a környezet gazebo szimulációját:
 
 ```
@@ -126,15 +117,24 @@ A telemanipulátor kézi vezérléshez a következő szkriptet kell futtatni:
 ```
 rosrun telemanipulator_aim_assist controller_keyboard.py
 ```
-A telemanipulátor interaktív markeres vezérléshez a következő szkriptet kell futtatni:
+### Irányítás interaktív markerrel
 
+A telemanipulátor interaktív markeres vezérléshez az előző lépéseket egy launch fájlban helyeztük el, azzal a különbséggel, hogy a `contoller_interactive_marker.py` szkriptet futtatjuk le a végén
 ```
-rosrun telemanipulator_aim_assist controller_interactive_marker.py
+roslaunch telemanipulator_aim_assist telemanipulator_aim_assist.launch
 ```
-</details>
+
 
 ### Irányítás MOGI haptikus eszközzel valós környezetben
 
+Indítsuk el a robotvezérlőt és az RVizt valós környezet mellett
+```
+roslaunch telemanipulator_aim_assist start_real_device.launch
+```
+Indítsuk el a telemanipulátor vezérlőjét is
+```
+roslaunch telemanipulator_aim_assist controller_haptic_device.launch
+```
 
 <!---## TODO
 
