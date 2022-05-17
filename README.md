@@ -8,11 +8,11 @@ Az alkalmazás valós és szimulált környezetben is implementálva lett, az al
 # Tartalomjegyzék
 1. [Projekt felépítése](#Projekt-felépítése)
 2. [Alkalmazás használata](#Alkalmazás-használata)
-2.1 [Dependenciák és telepítés](#Dependenciák-és-telepítés)  
+2.1. [Dependenciák és telepítés](#Dependenciák-és-telepítés)  
 2.2. [Szimulált környezet](#Szimulált-környezet)  
-2.2.1 [Irányítás koordináták megadásával](#Irányítás-koordináták-megadásával)  
-2.2.2 [Irányítás interaktív markerrel](#Irányítás-interaktív-markerrel)  
-2.3 [Irányítás MOGI haptikus eszközzel valós környezetben](#Irányítás-MOGI-haptikus-eszközzel-valós-környezetben)  
+2.2.1. [Irányítás koordináták megadásával](#Irányítás-koordináták-megadásával)  
+2.2.2. [Irányítás interaktív markerrel](#Irányítás-interaktív-markerrel)  
+2.3. [Irányítás MOGI haptikus eszközzel valós környezetben](#Irányítás-MOGI-haptikus-eszközzel-valós-környezetben)  
 
 # Projekt felépítése 
 
