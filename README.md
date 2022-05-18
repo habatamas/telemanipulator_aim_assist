@@ -14,12 +14,17 @@ Az alkalmazás valós és szimulált környezetben is implementálva lett, az al
 
 # Tartalomjegyzék
 1. [Projekt felépítése](#Projekt-felépítése)
-2. [Alkalmazás használata](#Alkalmazás-használata)
-2.1. [Dependenciák és telepítés](#Dependenciák-és-telepítés)  
-2.2. [Szimulált környezet](#Szimulált-környezet)  
-2.2.1. [Irányítás koordináták megadásával](#Irányítás-koordináták-megadásával)  
-2.2.2. [Irányítás interaktív markerrel](#Irányítás-interaktív-markerrel)  
-2.3. [Irányítás MOGI haptikus eszközzel valós környezetben](#Irányítás-MOGI-haptikus-eszközzel-valós-környezetben)  
+2. [Telepítési útmutató](#Telepítési-útmutató)  
+  2.1. [Dependenciák telepítése](#Dependenciák-telepítése)  
+  2.2. [Telepítés](#Telepítés)
+3. [Használat](#Használat)  
+  3.1. [Robotkar indítása](#Robotkar-indítása)  
+    3.1.1. [Szimuláció](#Szimuláció)  
+    3.1.2. [Valós eszköz](#Valós-eszköz)  
+  3.2. [Vezérlő indítása](#Vezérlő-indítása)  
+    3.2.1. [Irányítás koordináták megadásával](#Irányítás-koordináták-megadásával)  
+    3.2.2. [Irányítás interaktív markerrel](#Irányítás-interaktív-markerrel)  
+    3.2.3. [Irányítás MOGI haptikus eszközzel valós környezetben](#Irányítás-MOGI-haptikus-eszközzel)  
 
 # Projekt felépítése 
 
@@ -40,9 +45,10 @@ Ezen kívül elhelyeztünk egy asztalt néző RGB-D kamerát is, ez piros kockak
 RVizben megjeleníthetjük, mit "lát" a kamera, illetve itt jelennek meg a pozicionáló kúpok is. Az interaktív markeres verzérlés is innen valósítható meg. Ha aktív az aim assist, akkor a megfogó általunk megadott helyzetét sárga marker mutatja, a zöld marker pedig a valós, javított helyzetet. (A megfogó nyitását-zárását az OpenManipulator vezérlő GUI-jával irányíthatjuk)
 
 A robotkart irányíthatjuk ugyanúgy a vezérlő GUI-ból, vagy a `keyboard_controller.py` node használatával, a célkoordináták megadásával.
-# Alkalmazás használata
 
-## Dependenciák és telepítés
+# Telepítési útmutató
+
+## Dependenciák telepítése
 
 A csomag ROS Melodic platformra lett fejlesztve, megfelelő működéséhez a hivatalos OpenMANIPULATOR csomagokat is szükséges telepíteni az alábbi módon:
 
@@ -53,16 +59,28 @@ sudo apt-get install ros-melodic-open-manipulator-control-gui
 sudo apt-get install ros-melodic-open-manipulator-description
 ```
 
-További részletek a ROBOTIS hivatalos [weboldalán](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/quick_start_guide/).
+További részletek a csomag hivatalos [ROS wiki oldalán](http://wiki.ros.org/open_manipulator) vagy a ROBOTIS hivatalos [weboldalán](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/quick_start_guide/) olvashatók.
 
-**Telepítés**
+Ezen felül a tanszéki haptikus eszköz használatához [a hozzá tartozó csomagot](https://github.com/dudasdavid/mogi_haptic_device) is le kell tölteni:
+```
+cd ~/catkin_ws/src
+git clone https://github.com/dudasdavid/mogi_haptic_device.git
+``` 
+
+Mivel a ```mogi_haptic_device``` python3-ban lett implementálva, így ROS melodic alatt szükséges lehet még az alábbi python3 modulok telepítése:
+
+```
+pip3 install pyserial rospkg
+```
+
+## Telepítés
 
 Először lépjünk be a catkin workspace-ünk forrásmappájába:
 ```
 cd ~/catkin_ws/src
 ```
 
-Klónozzuk a repót:
+Klónozzuk a projekt repóját:
 ```
 git clone https://github.com/habatamas/telemanipulator_aim_assist.git
 ```
@@ -78,60 +96,70 @@ Töltsük be a környezetet:
 source devel/setup.bash
 ```
 
-## Szimulált környezet 
+
+# Használat
+
+Gyors teszteléshez elegendő az alábbi parancsot kiadni:
+```
+roslaunch telemanipulator_aim_assist telemanipulator_aim_assist.launch
+```
+Ez elindítja a robotkar szimulációját és a vezérlés interaktív markerrel végezhető.
+
+Egyéb konfigurációk is elérhetők, ehhez azonban külön kell indítani a vezérelni kívánt robotkart és a vezérlő eszközt. A továbbiakban ennek lehetséges módjai olvashatók. 
+
+## Robotkar indítása
+
+A robotkar gazebo szimulációs környezetben és valós eszközön egyaránt használható. Az alábbi lehetőségek közül kell az egyiket választani:
+
+### Szimuláció
+
+Az alábbi parancs kiadásával a robotkar gazebo szimulációja indítható:
+
+```
+roslaunch telemanipulator_aim_assist start_simulation.launch
+```
+
+### Valós eszköz
+
+Az alábbi parancs kiadásával az USB-n csatlakoztatott valós OpenMANIPULATOR eszköz indítható:
+
+```
+roslaunch telemanipulator_aim_assist start_real_device.launch
+```
+
+___
+
+## Vezérlő indítása
+
+A telemanipulációs feladat mester oldalán több opció közül lehet kiválasztani a kívánt vezérlő eszközt. Az alábbiak közül kell az egyiket kiválasztani:
+
 ### Irányítás koordináták megadásával
-Először indítsuk el a robotkar és a környezet gazebo szimulációját:
 
+Az alábbi node indításakor kézzel lehet megadni a cél koordinátákat:
 ```
-roslaunch telemanipulator_aim_assist open_manipulator_gazebo.launch
-```
-
-Ezután indítsuk el a robotkar kinematikai vezérlőjét:
-
-```
-roslaunch open_manipulator_controller open_manipulator_controller.launch use_platform:=false
+rosrun telemanipulator_aim_assist controller_keyboard.py
 ```
 
-Majd az rviz-t:
-
-```
-roslaunch telemanipulator_aim_assist telemanipulator_aim_assist_rviz.launch
-```
-
-A teszteléshez indítsuk el a vezérlő GUI-t:
+A megfogó működtetéséhez pedig a hivatalos vezérlő GUI-t kell elindítani:
 
 ```
 roslaunch open_manipulator_control_gui open_manipulator_control_gui.launch
 ```
 
-Nyomjuk meg a __Timer Start__ gombot, majd a __Task Space__ fület megnyitva tetszőleges TCP koordináták adhatók meg. A __Send__ gomb megnyomásával a robot a beállítótt pozícióba mozgatható.
+Nyomjuk meg a __Timer Start__ gombot, ezután a gripper open/gripper close gombokkal lehet a megfogót nyitni/zárni.
 
-A koordinátor node indításához az alábbi szkriptet kell futtatni:
-
-```
-rosrun telemanipulator_aim_assist coordinator.py
-```
-
-A telemanipulátor kézi vezérléshez a következő szkriptet kell futtatni:
-
-```
-rosrun telemanipulator_aim_assist controller_keyboard.py
-```
 ### Irányítás interaktív markerrel
 
-A telemanipulátor interaktív markeres vezérléshez az előző lépéseket egy launch fájlban helyeztük el, azzal a különbséggel, hogy a `contoller_interactive_marker.py` szkriptet futtatjuk le a végén
-```
-roslaunch telemanipulator_aim_assist telemanipulator_aim_assist.launch
-```
+Rviz-ben megjelenő interaktív markerrel is lehet a robotkart irányítani az alábbi node indításával:
 
-
-### Irányítás MOGI haptikus eszközzel valós környezetben
-
-Indítsuk el a robotvezérlőt és az RVizt valós környezet mellett
 ```
-roslaunch telemanipulator_aim_assist start_real_device.launch
+rosrun telemanipulator_aim_assist controller_interactive_marker.py
 ```
-Indítsuk el a telemanipulátor vezérlőjét is
+A megfogó működtetése az előző pontban leírtak szerint történik.
+
+### Irányítás MOGI haptikus eszközzel
+
+Indítsuk el a telemanipulátor vezérlőjét:
 ```
 roslaunch telemanipulator_aim_assist controller_haptic_device.launch
 ```
